@@ -6,10 +6,10 @@ namespace BestTimeEvent
     public class BestTimeEventCalculator
     {
         private List<Events> _events;
-        private  Dictionary<string, Locations> _locations;
+        private List<KeyValuePair<string, Locations>> _locations;
 
-        public BestTimeEventCalculator(List<Events> events, 
-            Dictionary<string, Locations> locations)
+        public BestTimeEventCalculator(List<Events> events,
+            List<KeyValuePair<string, Locations>> locations)
         {
             _events = events;
             _locations = locations;
@@ -33,7 +33,10 @@ namespace BestTimeEvent
                 {
                     if (evnt.Start_Time >= currentTime && evnt.End_Time <= currentEndTime)
                     {
-                        int travelTime = from != null ? _locations[from].GetTravelTime(evnt.Location) : 0;
+                        int travelTime = from != null ? 
+                            _locations.Find(k => k.Key == from).Value
+                            .GetTravelTime(evnt.Location) : 0;
+
                         DateTime arrivalTime = currentTime.AddMinutes(travelTime);
 
                         if (arrivalTime <= evnt.Start_Time && evnt.Priority > bestPriority)
